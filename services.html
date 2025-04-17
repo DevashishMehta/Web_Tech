@@ -1,0 +1,57 @@
+<!-- services.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Services</title>
+  <link rel="stylesheet" href="services.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">Mehta Consultancy</div>
+    <ul class="nav-list">
+      <li><a href="index.html">Home</a></li>
+      <li style="text-decoration: underline;"><a href="services.html">Services</a></li>
+      <li><a href="#">Contact Us</a></li>
+      <li><a href="#">Help</a></li>
+      <li><a href="sign_in.html"><button>Sign In</button></a></li>
+      <li><a href="log_in.html"><button>Log In</button></a></li>
+    </ul>
+  </nav>
+
+  <main class="services-section">
+    <h1>Our Services</h1>
+
+    <h2 class="subheading">ERP Services</h2>
+    <div class="services-grid">
+      <div class="service-tab">Inventory Management </div>
+      <div class="service-tab">Employee Registry</div>
+      <div class="service-tab">Order Tracking</div>
+    </div>
+
+    <h2 class="subheading">CRM Services</h2>
+    <div class="services-grid">
+      <div class="service-tab">Customer Management</div>
+      <div class="service-tab">Leads Registry</div>
+      <div class="service-tab">Feedback</div>
+    </div>
+  </main>
+
+  <script>
+    document.querySelectorAll('.service-tab').forEach(tab => {
+      tab.style.cursor = 'pointer'; // show pointer on hover
+  
+      tab.addEventListener('click', () => {
+        const firstWord = tab.textContent.trim().split(' ')[0].toLowerCase();
+        const pageUrl = `${firstWord}.html`;
+  
+        // Check if file exists using fetch (optional for enhancement)
+        window.location.href = pageUrl;
+      });
+    });
+  </script>
+
+  <!--<script src="services.js"></script>-->
+</body>
+</html>

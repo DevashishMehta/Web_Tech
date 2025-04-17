@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Inventory Manager</title>
+  <style>
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      background-color: #f4f4f4;
+      margin-top: 250px;
+    }
+
+    .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rebeccapurple;
+    color: aliceblue;
+    padding: 20px 60px;
+    height: 100px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    
+    z-index: 1000;
+  }
+  
+  .logo {
+    font-size: 32px;
+    font-weight: bold;
+  }
+  
+  .nav-list {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  
+  .nav-list li {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .nav-list a {
+    text-decoration: none;
+    color: aliceblue;
+  }
+  
+  .nav-list button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    background-color: #fff;
+    color: rebeccapurple;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s ease;
+  }
+  
+  .nav-list button:hover {
+    transform: translateY(-3px);
+    background-color: lightblue;
+    color: rebeccapurple;
+  }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    h1 {
+      text-align: center;
+    }
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    form input, form button {
+      padding: 10px;
+      font-size: 16px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    button {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">Mehta Consultancy</div>
+    <ul class="nav-list">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="#">Contact Us</a></li>
+      <li><a href="#">Help</a></li>
+      <li>"""""""</li>
+    </ul>
+  </nav>
+  <div class="container">
+    <h1>Inventory Manager</h1>
+    <form id="itemForm">
+      <input type="text" id="name" placeholder="Item Name" required>
+      <input type="text" id="desc" placeholder="Description" required>
+      <input type="number" id="qty" placeholder="Quantity" required>
+      <button type="submit">Add Item</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Quantity</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="inventoryBody">
+        <!-- Table rows will appear here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+
+    const form = document.getElementById('itemForm');
+    const tbody = document.getElementById('inventoryBody');
+
+    function saveInventory() {
+      localStorage.setItem('inventory', JSON.stringify(inventory));
+    }
+
+    function renderTable() {
+      tbody.innerHTML = "";
+      inventory.forEach((item, index) => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td>${item.name}</td>
+          <td>${item.desc}</td>
+          <td>
+            <input type="number" min="0" value="${item.qty}" onchange="updateQty(${index}, this.value)" style="width: 60px;">
+            <button onclick="changeQty(${index}, -1)">-</button>
+            <button onclick="changeQty(${index}, 1)">+</button>
+          </td>
+          <td>
+            <button onclick="deleteItem(${index})" style="color: red;">Delete</button>
+          </td>
+        `;
+
+        tbody.appendChild(row);
+      });
+    }
+
+    function updateQty(index, value) {
+      inventory[index].qty = Math.max(0, parseInt(value));
+      saveInventory();
+      renderTable();
+    }
+
+    function changeQty(index, delta) {
+      inventory[index].qty = Math.max(0, inventory[index].qty + delta);
+      saveInventory();
+      renderTable();
+    }
+
+    function deleteItem(index) {
+      inventory.splice(index, 1);
+      saveInventory();
+      renderTable();
+    }
+
+    // Make the above functions globally available
+    window.updateQty = updateQty;
+    window.changeQty = changeQty;
+    window.deleteItem = deleteItem;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const desc = document.getElementById('desc').value.trim();
+      const qty = parseInt(document.getElementById('qty').value);
+
+      if (name && desc && !isNaN(qty)) {
+        inventory.push({ name, desc, qty });
+        saveInventory();
+        renderTable();
+        form.reset();
+      } else {
+        alert("Please enter valid item details.");
+      }
+    });
+
+    renderTable();
+  </script>
+</body>
+</html>

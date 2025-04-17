@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Employee Registry</title>
+  <style>
+    /* --- Navbar Styles --- */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rebeccapurple;
+      color: aliceblue;
+      padding: 20px 60px;
+      height: 100px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 32px;
+      font-weight: bold;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .nav-list li {
+      font-size: 18px;
+      font-weight: bold;
+      color: chartreuse;
+    }
+
+    .nav-list a {
+      text-decoration: none;
+      color: aliceblue;
+    }
+
+    .nav-list button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #fff;
+      color: rebeccapurple;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s ease;
+    }
+
+    .nav-list button:hover {
+      transform: translateY(-3px);
+      background-color: lightblue;
+      color: rebeccapurple;
+    }
+
+    /* --- Page Content --- */
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      background-color: #eef2f3;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 140px auto 40px; /* Space below fixed navbar */
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    form input, form button {
+      padding: 10px;
+      font-size: 15px;
+    }
+
+    input[type="text"], input[type="email"], input[type="tel"] {
+      flex: 1;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+
+    tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+    }
+
+    .delete-btn {
+      background-color: #ff4d4d;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🌐 Navbar -->
+  <nav class="navbar">
+    <div class="logo">Mehta Consultancy</div>
+    <ul class="nav-list">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="#">Contact Us</a></li>
+      <li><a href="#">Help</a></li>
+      <li>__"""""</li>
+    </ul>
+  </nav>
+
+  <!-- 👨‍💼 Employee Form & Table -->
+  <div class="container">
+    <h1>Employee Registry</h1>
+    <form id="employeeForm">
+      <input type="text" id="empName" placeholder="Full Name" required>
+      <input type="text" id="designation" placeholder="Designation" required>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="tel" id="phone" placeholder="Phone (10 digits)" pattern="[0-9]{10}" required>
+      <button type="submit">Add Employee</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Designation</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="employeeBody"></tbody>
+    </table>
+  </div>
+
+  <!-- 📜 JavaScript -->
+  <script>
+    let employees = JSON.parse(localStorage.getItem('employees')) || [];
+
+    const form = document.getElementById('employeeForm');
+    const tbody = document.getElementById('employeeBody');
+
+    function saveEmployees() {
+      localStorage.setItem('employees', JSON.stringify(employees));
+    }
+
+    function renderTable() {
+      tbody.innerHTML = '';
+      employees.forEach((emp, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${emp.name}</td>
+          <td>${emp.designation}</td>
+          <td>${emp.email}</td>
+          <td>${emp.phone}</td>
+          <td><button class="delete-btn" data-index="${index}">Delete</button></td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+          const index = this.getAttribute('data-index');
+          employees.splice(index, 1);
+          saveEmployees();
+          renderTable();
+        });
+      });
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('empName').value.trim();
+      const designation = document.getElementById('designation').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+
+      if (name && designation && email && phone.length === 10) {
+        employees.push({ name, designation, email, phone });
+        saveEmployees();
+        renderTable();
+        form.reset();
+      } else {
+        alert("Please enter valid employee details.");
+      }
+    });
+
+    renderTable();
+  </script>
+</body>
+</html>

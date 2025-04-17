@@ -1,0 +1,42 @@
+<!-- log_in.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Log In</title>
+  <link rel="stylesheet" href="log_in.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">Mehta Consultancy</div>
+    <ul class="nav-list">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="#">Contact Us</a></li>
+      <li><a href="#">Help</a></li>
+      <li><a href="sign_in.html"><button>Sign In</button></a></li>
+      <li><a href="log_in.html"><button>Log In</button></a></li>
+    </ul>
+  </nav>
+
+  <body>
+    <div class="login-container">
+      <h2>Welcome Back</h2>
+      <div class="input-group">
+        <input type="text" id="username" required placeholder=" " />
+        <label for="username">Username</label>
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" required placeholder=" " />
+        <label for="password">Password</label>
+        <span class="toggle-password" onclick="togglePassword()">👁️</span>
+      </div>
+      <button onclick="login()">Login</button>
+      <div class="footer">
+        <p>Don't have an account? <a href="#">Register</a></p>
+      </div>
+    </div>
+  <script src="log_in.js"></script>
+</body>
+</html>

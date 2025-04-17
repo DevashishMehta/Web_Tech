@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Customer Management</title>
+  <style>
+    /* --- Navbar --- */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rebeccapurple;
+      color: aliceblue;
+      padding: 20px 60px;
+      height: 100px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 32px;
+      font-weight: bold;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .nav-list li {
+      font-size: 18px;
+      font-weight: bold;
+      color: chartreuse;
+    }
+
+    .nav-list a {
+      text-decoration: none;
+      color: aliceblue;
+    }
+
+    .nav-list button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #fff;
+      color: rebeccapurple;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s ease;
+    }
+
+    .nav-list button:hover {
+      transform: translateY(-3px);
+      background-color: lightblue;
+      color: rebeccapurple;
+    }
+
+    /* --- Page Styling --- */
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      background-color: #f7f9fb;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 140px auto 40px;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    form input, form textarea, form button {
+      padding: 10px;
+      font-size: 15px;
+    }
+
+    input[type="text"], input[type="tel"], textarea {
+      flex: 1;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+
+    tr:hover {
+      background-color: #f2f2f2;
+    }
+
+    .delete-btn {
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .delete-btn:hover {
+      background-color: #e60000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🌐 Navbar -->
+  <nav class="navbar">
+    <div class="logo">Mehta Consultancy</div>
+    <ul class="nav-list">
+      <li><a href="#">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="#">Contact Us</a></li>
+      <li><a href="#">Help</a></li>
+      <li>__"""""</li>
+    </ul>
+  </nav>
+
+  <!-- 💬 Customer Management -->
+  <div class="container">
+    <h1>Customer Management</h1>
+    <form id="customerForm">
+      <input type="text" id="customerName" placeholder="Customer Name" required>
+      <input type="tel" id="customerPhone" placeholder="Phone Number (10 digits)" pattern="[0-9]{10}" required>
+      <textarea id="customerComplaint" placeholder="Complaint" required></textarea>
+      <button type="submit">Add Customer</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Complaint</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="customerTableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- 📜 JavaScript -->
+  <script>
+    let customers = JSON.parse(localStorage.getItem('customers')) || [];
+
+    const customerForm = document.getElementById('customerForm');
+    const customerTable = document.getElementById('customerTableBody');
+
+    function saveCustomers() {
+      localStorage.setItem('customers', JSON.stringify(customers));
+    }
+
+    function renderTable() {
+      customerTable.innerHTML = '';
+      customers.forEach((c, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${c.name}</td>
+          <td>${c.phone}</td>
+          <td>${c.complaint}</td>
+          <td><button class="delete-btn" data-index="${index}">Delete</button></td>
+        `;
+        customerTable.appendChild(row);
+      });
+
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const index = btn.getAttribute('data-index');
+          customers.splice(index, 1);
+          saveCustomers();
+          renderTable();
+        });
+      });
+    }
+
+    customerForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('customerName').value.trim();
+      const phone = document.getElementById('customerPhone').value.trim();
+      const complaint = document.getElementById('customerComplaint').value.trim();
+
+      if (name && phone.length === 10 && complaint) {
+        customers.push({ name, phone, complaint });
+        saveCustomers();
+        renderTable();
+        customerForm.reset();
+      } else {
+        alert('Please enter all customer details correctly.');
+      }
+    });
+
+    renderTable();
+  </script>
+
+</body>
+</html>

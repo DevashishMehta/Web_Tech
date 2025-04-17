@@ -1,0 +1,143 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Times New Roman', Times, serif;
+  background-color: #f2f2f2;
+  line-height: 1.6;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rebeccapurple;
+  color: aliceblue;
+  padding: 20px 60px;
+  height: 100px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.logo {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.nav-list li {
+  font-size: 18px;
+  font-weight: bold;
+  color: chartreuse;
+}
+
+.nav-list a {
+  text-decoration: none;
+  color: aliceblue;
+}
+
+.nav-list button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background-color: #fff;
+  color: rebeccapurple;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s ease;
+}
+
+.nav-list button:hover {
+  transform: translateY(-3px);
+  background-color: lightblue;
+  color: rebeccapurple;
+}
+
+/* Main Content */
+.content {
+  margin-top: 140px;
+  padding: 60px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 5px 5px 15px rebeccapurple;
+}
+
+.content:hover{
+  transform: translateY(-10px);
+}
+
+.about h2 {
+  font-size: 28px;
+  color: rebeccapurple;
+  margin-bottom: 10px;
+  box-shadow: 0px 3px 3px lightblue;
+  border-radius: 3px;
+}
+
+.about p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #36454F; /* Charcoal Gray */
+}
+
+.content-list {
+  list-style: none;
+}
+
+.content-list p {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.content-list ul {
+  padding-left: 20px;
+  list-style-type: disc;
+  color: #555;
+}
+
+.content-list ul li {
+  margin-bottom: 5px;
+}
+
+/* Message Sections */
+.message {
+  font-size: 25px;
+  padding: 60px;
+  margin: 0 auto;
+  max-width: 900px;
+  text-align: justify;
+}
+
+.MessageHeading {
+  font-size: 35px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 45px;
+}
+
+.message ul {
+  padding-left: 20px;
+}
+
+.message ul li {
+  margin-bottom: 15px;
+  list-style: disc;
+  color: #444;
+}

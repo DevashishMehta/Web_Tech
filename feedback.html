@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Feedback Management</title>
+  <style>
+    /* Navbar styling */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rebeccapurple;
+      color: aliceblue;
+      padding: 20px 60px;
+      height: 100px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 32px;
+      font-weight: bold;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .nav-list li {
+      font-size: 18px;
+      font-weight: bold;
+      color: chartreuse;
+    }
+
+    .nav-list a {
+      text-decoration: none;
+      color: aliceblue;
+    }
+
+    .nav-list button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #fff;
+      color: rebeccapurple;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s ease;
+    }
+
+    .nav-list button:hover {
+      transform: translateY(-3px);
+      background-color: lightblue;
+      color: rebeccapurple;
+    }
+
+    /* Page styling */
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      background-color: #f7f9fb;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 140px auto 40px;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    form input, form textarea, form select, form button {
+      padding: 10px;
+      font-size: 15px;
+    }
+
+    input[type="text"], input[type="tel"], textarea, select {
+      flex: 1 1 45%;
+    }
+
+    textarea {
+      resize: none;
+      height: 80px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+
+    tr:hover {
+      background-color: #f2f2f2;
+    }
+
+    .delete-btn {
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .delete-btn:hover {
+      background-color: #e60000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">Mehta Consultancy</div>
+    <ul class="nav-list">
+      <li><a href="#">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="#">Contact Us</a></li>
+      <li><a href="#">Help</a></li>
+        <li>__"""""</li>
+    </ul>
+  </nav>
+
+  <!-- Feedback Form -->
+  <div class="container">
+    <h1>Feedback Management</h1>
+    <form id="feedbackForm">
+      <input type="text" id="customerName" placeholder="Customer Name" required>
+      <input type="tel" id="phoneNumber" placeholder="Phone Number (10 digits)" pattern="[0-9]{10}" required>
+      <textarea id="feedbackMessage" placeholder="Your Feedback..." required></textarea>
+      <select id="rating" required>
+        <option value="">Rating (1-5)</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+      <button type="submit">Submit Feedback</button>
+    </form>
+
+    <!-- Table -->
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Feedback</th>
+          <th>Rating</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="feedbackTableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- JS -->
+  <script>
+    let feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
+
+    const form = document.getElementById('feedbackForm');
+    const tableBody = document.getElementById('feedbackTableBody');
+
+    function saveFeedbacks() {
+      localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+    }
+
+    function renderFeedbacks() {
+      tableBody.innerHTML = '';
+      feedbacks.forEach((entry, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${entry.name}</td>
+          <td>${entry.phone}</td>
+          <td>${entry.message}</td>
+          <td>${entry.rating}</td>
+          <td><button class="delete-btn" data-index="${index}">Delete</button></td>
+        `;
+        tableBody.appendChild(row);
+      });
+
+      document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          const index = button.getAttribute('data-index');
+          feedbacks.splice(index, 1);
+          saveFeedbacks();
+          renderFeedbacks();
+        });
+      });
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('customerName').value.trim();
+      const phone = document.getElementById('phoneNumber').value.trim();
+      const message = document.getElementById('feedbackMessage').value.trim();
+      const rating = document.getElementById('rating').value;
+
+      if (name && phone.length === 10 && message && rating) {
+        feedbacks.push({ name, phone, message, rating });
+        saveFeedbacks();
+        renderFeedbacks();
+        form.reset();
+      } else {
+        alert('Please fill all fields correctly.');
+      }
+    });
+
+    renderFeedbacks();
+  </script>
+</body>
+</html>

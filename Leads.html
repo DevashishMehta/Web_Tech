@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lead Registry</title>
+  <style>
+    /* --- Navbar --- */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rebeccapurple;
+      color: aliceblue;
+      padding: 20px 60px;
+      height: 100px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 32px;
+      font-weight: bold;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .nav-list li {
+      font-size: 18px;
+      font-weight: bold;
+      color: chartreuse;
+    }
+
+    .nav-list a {
+      text-decoration: none;
+      color: aliceblue;
+    }
+
+    .nav-list button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #fff;
+      color: rebeccapurple;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s ease;
+    }
+
+    .nav-list button:hover {
+      transform: translateY(-3px);
+      background-color: lightblue;
+      color: rebeccapurple;
+    }
+
+    /* --- Page Style --- */
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      background-color: #f7f9fb;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 140px auto 40px;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    form input, form select, form button {
+      padding: 10px;
+      font-size: 15px;
+    }
+
+    input[type="text"], input[type="tel"], select {
+      flex: 1;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+
+    tr:hover {
+      background-color: #f2f2f2;
+    }
+
+    .delete-btn {
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .delete-btn:hover {
+      background-color: #e60000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🌐 Navbar -->
+  <nav class="navbar">
+    <div class="logo">Mehta Consultancy</div>
+    <ul class="nav-list">
+      <li><a href="#">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="#">Contact Us</a></li>
+      <li><a href="#">Help</a></li>
+      <li>__"""""</li>
+    </ul>
+  </nav>
+
+  <!-- 📄 Lead Registry -->
+  <div class="container">
+    <h1>Lead Registry</h1>
+    <form id="leadForm">
+      <input type="text" id="leadName" placeholder="Lead Name" required>
+      <input type="tel" id="leadContact" placeholder="Contact Number (10 digits)" pattern="[0-9]{10}" required>
+      <input type="text" id="leadSource" placeholder="Source (e.g. Website, Referral)" required>
+      <select id="leadStatus" required>
+        <option value="">Select Status</option>
+        <option value="New">New</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Converted">Converted</option>
+      </select>
+      <button type="submit">Add Lead</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Contact</th>
+          <th>Source</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="leadTableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- 📜 JavaScript -->
+  <script>
+    let leads = JSON.parse(localStorage.getItem('leads')) || [];
+
+    const leadForm = document.getElementById('leadForm');
+    const leadTable = document.getElementById('leadTableBody');
+
+    function saveLeads() {
+      localStorage.setItem('leads', JSON.stringify(leads));
+    }
+
+    function renderTable() {
+      leadTable.innerHTML = '';
+      leads.forEach((lead, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${lead.name}</td>
+          <td>${lead.contact}</td>
+          <td>${lead.source}</td>
+          <td>${lead.status}</td>
+          <td><button class="delete-btn" data-index="${index}">Delete</button></td>
+        `;
+        leadTable.appendChild(row);
+      });
+
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const index = btn.getAttribute('data-index');
+          leads.splice(index, 1);
+          saveLeads();
+          renderTable();
+        });
+      });
+    }
+
+    leadForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('leadName').value.trim();
+      const contact = document.getElementById('leadContact').value.trim();
+      const source = document.getElementById('leadSource').value.trim();
+      const status = document.getElementById('leadStatus').value;
+
+      if (name && contact.length === 10 && source && status) {
+        leads.push({ name, contact, source, status });
+        saveLeads();
+        renderTable();
+        leadForm.reset();
+      } else {
+        alert('Please fill all fields correctly.');
+      }
+    });
+
+    renderTable();
+  </script>
+
+</body>
+</html>
